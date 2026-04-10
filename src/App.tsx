@@ -168,7 +168,7 @@ export function App() {
       <header style={styles.header}>
         <div>
           <h1 style={styles.title}>{APP_NAME}</h1>
-          <p style={styles.kicker}>Focus on working out, not waiting in line</p>
+          <p style={styles.kicker}>More on working out, less on waiting</p>
           <p style={styles.sub}>
             Track real-time usage of the Nick and Bakke gyms
           </p>
