@@ -14,6 +14,9 @@ import type { LocationCount } from "./types";
 
 const REFRESH_MS = 45_000;
 const THEME_STORAGE_KEY = "hustlerfit-theme";
+const APP_NAME = "MadGym";
+/** Browser tab; index.html <title> should match for first paint */
+const DOCUMENT_TITLE = `${APP_NAME} — Live gym occupancy`;
 
 function SunIcon() {
   return (
@@ -117,6 +120,10 @@ export function App() {
     localStorage.setItem(THEME_STORAGE_KEY, theme);
   }, [theme]);
 
+  useEffect(() => {
+    document.title = DOCUMENT_TITLE;
+  }, []);
+
   const load = useCallback(async () => {
     setError(null);
     try {
@@ -160,7 +167,7 @@ export function App() {
     <div style={styles.page}>
       <header style={styles.header}>
         <div>
-          <h1 style={styles.title}>MadGym</h1>
+          <h1 style={styles.title}>{APP_NAME}</h1>
           <p style={styles.kicker}>Focus on working out, not waiting in line</p>
           <p style={styles.sub}>
             Track real-time usage of the Nick and Bakke gyms
