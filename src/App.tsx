@@ -13,6 +13,44 @@ import {
 import type { LocationCount } from "./types";
 
 const REFRESH_MS = 45_000;
+const THEME_STORAGE_KEY = "hustlerfit-theme";
+
+function SunIcon() {
+  return (
+    <svg
+      width={20}
+      height={20}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden
+    >
+      <circle cx="12" cy="12" r="4" />
+      <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41" />
+    </svg>
+  );
+}
+
+function MoonIcon() {
+  return (
+    <svg
+      width={20}
+      height={20}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden
+    >
+      <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+    </svg>
+  );
+}
 
 function formatTime(iso: string): string {
   const d = new Date(iso);
@@ -64,11 +102,20 @@ function uniqueFacilities(rows: LocationCount[]) {
 }
 
 export function App() {
+  const [theme, setTheme] = useState<"light" | "dark">(() => {
+    const s = localStorage.getItem(THEME_STORAGE_KEY);
+    return s === "light" || s === "dark" ? s : "dark";
+  });
   const [rows, setRows] = useState<LocationCount[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [facilityId, setFacilityId] = useState<string>("All");
   const [lastFetch, setLastFetch] = useState<Date | null>(null);
+
+  useEffect(() => {
+    document.documentElement.setAttribute("data-theme", theme);
+    localStorage.setItem(THEME_STORAGE_KEY, theme);
+  }, [theme]);
 
   const load = useCallback(async () => {
     setError(null);
@@ -120,6 +167,21 @@ export function App() {
           </p>
         </div>
         <div style={styles.controls}>
+          <button
+            type="button"
+            style={styles.themeToggle}
+            onClick={() =>
+              setTheme((t) => (t === "dark" ? "light" : "dark"))
+            }
+            aria-label={
+              theme === "dark"
+                ? "Switch to light theme"
+                : "Switch to dark theme"
+            }
+            title={theme === "dark" ? "Light mode" : "Dark mode"}
+          >
+            {theme === "dark" ? <SunIcon /> : <MoonIcon />}
+          </button>
           <label style={styles.label}>
             Facility
             <select
@@ -275,13 +337,27 @@ const styles: Record<string, CSSProperties> = {
   link: {
     color: "var(--accent)",
     textDecoration: "none",
-    borderBottom: "1px solid rgba(94, 234, 212, 0.35)",
+    borderBottom: "1px solid var(--accent-border)",
   },
   controls: {
     display: "flex",
     flexWrap: "wrap",
     gap: "0.75rem",
     alignItems: "flex-end",
+  },
+  themeToggle: {
+    display: "inline-flex",
+    alignItems: "center",
+    justifyContent: "center",
+    width: 44,
+    height: 44,
+    padding: 0,
+    borderRadius: 12,
+    border: "1px solid var(--border)",
+    background: "var(--bg-elevated)",
+    color: "var(--text)",
+    boxShadow: "0 1px 2px rgba(0,0,0,0.04)",
+    transition: "background 0.2s ease, border-color 0.2s ease",
   },
   label: {
     display: "flex",
@@ -305,7 +381,7 @@ const styles: Record<string, CSSProperties> = {
   btn: {
     padding: "0.65rem 1.1rem",
     borderRadius: 10,
-    border: "1px solid rgba(94, 234, 212, 0.35)",
+    border: "1px solid var(--accent-border)",
     background: "var(--accent-dim)",
     color: "var(--accent)",
     fontWeight: 600,
@@ -314,9 +390,9 @@ const styles: Record<string, CSSProperties> = {
   banner: {
     padding: "0.75rem 1rem",
     borderRadius: 10,
-    background: "rgba(248, 113, 113, 0.12)",
-    border: "1px solid rgba(248, 113, 113, 0.25)",
-    color: "#fecaca",
+    background: "var(--banner-bg)",
+    border: "1px solid var(--banner-border)",
+    color: "var(--banner-text)",
     marginBottom: "1rem",
   },
   meta: {
@@ -410,7 +486,7 @@ const styles: Record<string, CSSProperties> = {
   track: {
     height: 8,
     borderRadius: 999,
-    background: "rgba(255,255,255,0.06)",
+    background: "var(--track-bg)",
     overflow: "hidden",
   },
   fill: {
