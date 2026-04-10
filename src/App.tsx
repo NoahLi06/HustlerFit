@@ -161,7 +161,7 @@ export function App() {
       <header style={styles.header}>
         <div>
           <h1 style={styles.title}>HustlerFit</h1>
-          <p style={styles.kicker}>Live occupancy</p>
+          <p style={styles.kicker}>Focus on working out, not waiting in line</p>
           <p style={styles.sub}>
             Track real-time usage of both the Nick and Bakke
           </p>
@@ -170,9 +170,7 @@ export function App() {
           <button
             type="button"
             style={styles.themeToggle}
-            onClick={() =>
-              setTheme((t) => (t === "dark" ? "light" : "dark"))
-            }
+            onClick={() => setTheme((t) => (t === "dark" ? "light" : "dark"))}
             aria-label={
               theme === "dark"
                 ? "Switch to light theme"
